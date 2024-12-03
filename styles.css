@@ -19,6 +19,7 @@ h1 {
 }
 
 .timer {
+    text-decoration: underline;
     width: 300px;
     margin: 10px;
     padding: 20px;
