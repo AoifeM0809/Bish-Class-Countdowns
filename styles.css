@@ -29,7 +29,8 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-sizing: border-box;
+    word-wrap: break-word;
+   
 }
 
 #timer1 { background-color: #ffadad; }
