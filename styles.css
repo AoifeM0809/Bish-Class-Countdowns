@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #333;
+    margin-top: 20px;
+}
+
+.countdown-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+.timer {
+    width: 300px;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+    font-size: 1.2em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#timer1 { background-color: #ffadad; }
+#timer2 { background-color: #ffd6a5; }
+#timer3 { background-color: #fdffb6; }
+#timer4 { background-color: #caffbf; }
+#timer5 { background-color: #9bf6ff; }
+#timer6 { background-color: #a0c4ff; }
+#timer7 { background-color: #bdb2ff; }
+#timer8 { background-color: #ffc6ff; }
+#timer9 { background-color: #d0f4de; }
+
+.time {
+    font-weight: bold;
+}
