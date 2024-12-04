@@ -31,6 +31,16 @@ h1 {
     position: relative;
 }
 
+#timer1 { background-color: #ffadad; }
+#timer2 { background-color: #ffd6a5; }
+#timer3 { background-color: #fdffb6; }
+#timer4 { background-color: #bdb2ff; }
+#timer5 { background-color: #9bf6ff; }
+#timer6 { background-color: #a0c4ff; }
+#timer7 { background-color: #bdb2ff; }
+#timer8 { background-color: #ffc6ff; }
+#timer9 { background-color: #d0f4de; }
+
 .timer span.time {
     font-size: 24px;
     font-weight: bold;
