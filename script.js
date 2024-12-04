@@ -11,7 +11,10 @@ const schedule = [
 ];
 
 function startTimers() {
-    schedule.forEach(({ id, start, end, label }) => {
+    let currentTimerIndex = 0;
+
+    // Loop through the schedule array
+    schedule.forEach(({ id, start, end, label }, index) => {
         const timerElement = document.getElementById(id);
         const circleElement = document.getElementById(label);
 
@@ -73,16 +76,25 @@ function startTimers() {
                     timerElement.style.color = timerElement.style.color === "red" ? "black" : "red";
                 }
 
-                // Call updateTimer again after a minute (real-time sync)
-                setTimeout(updateTimer, 60000); // Update every minute
+                // Call updateTimer again after a second (real-time sync)
+                setTimeout(updateTimer, 1000); // Update every second
             } else if (now > endTime) {
-                // Timer is over
+                // Timer is over, move to the next timer
+                if (currentTimerIndex < schedule.length - 1) {
+                    // Move to the next timer
+                    currentTimerIndex++;
+
+                    // Reset the green circle for the new timer
+                    startTimers(); // This starts the next timer automatically
+                }
+
+                // Timer finished, stop the countdown and display "Time's Up!"
                 timerElement.querySelector(".time").textContent = "Time's Up!";
                 timerElement.style.color = "blue"; // Fun end state
             }
         }
 
-        updateTimer(); // Start the timer
+        updateTimer(); // Start the timer for the current class
     });
 }
 
