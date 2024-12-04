@@ -19,66 +19,62 @@ function startTimers() {
             const now = new Date();
             const [startHour, startMinute] = start.split(":").map(Number);
             const [endHour, endMinute] = end.split(":").map(Number);
-            const startTime = new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                now.getDate(),
-                startHour,
-                startMinute
-            );
-            const endTime = new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                now.getDate(),
-                endHour,
-                endMinute
-            );
+
+            const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute);
+            const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute);
 
             if (now >= startTime && now <= endTime) {
-                // Calculate remaining time
+                // Calculate elapsed time in milliseconds
+                const elapsedMs = now - startTime;
+                const totalDuration = endTime - startTime; // Total duration of the class period
+                const elapsedTimeRatio = elapsedMs / totalDuration; // Fraction of time elapsed
+
+                // Calculate remaining time in minutes and seconds
                 const remainingMs = endTime - now;
-                const minutes = Math.floor((remainingMs / 1000 / 60) % 60);
-                const seconds = Math.floor((remainingMs / 1000) % 60);
+                const remainingMinutes = Math.floor(remainingMs / 1000 / 60); // Minutes left
+                const remainingSeconds = Math.floor((remainingMs / 1000) % 60); // Seconds left
 
                 // Update text countdown
-                timerElement.querySelector(".time").textContent =
-                    `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+                timerElement.querySelector(".time").textContent = `${remainingMinutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
 
-                // Update circular timer
+                // Update the circular timer (Green growing based on elapsed time)
                 const ctx = circleElement.getContext("2d");
                 const radius = circleElement.width / 2 - 5;
                 const centerX = circleElement.width / 2;
                 const centerY = circleElement.height / 2;
-                const progress = remainingMs / (endTime - startTime);
 
-                ctx.clearRect(0, 0, circleElement.width, circleElement.height);
+                // Calculate the angle to draw (based on elapsed time)
+                const angle = 2 * Math.PI * elapsedTimeRatio;
 
-                // Draw background circle
+                ctx.clearRect(0, 0, circleElement.width, circleElement.height); // Clear previous drawings
+
+                // Draw the background circle
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-                ctx.strokeStyle = "#ccc";
+                ctx.strokeStyle = "#ccc"; // Light gray for background
                 ctx.lineWidth = 5;
                 ctx.stroke();
 
-                // Draw progress circle
+                // Draw the progress circle (Green expanding based on elapsed time)
                 ctx.beginPath();
                 ctx.arc(
                     centerX,
                     centerY,
                     radius,
-                    -0.5 * Math.PI,
-                    2 * Math.PI * progress - 0.5 * Math.PI
+                    -0.5 * Math.PI, // Start at the top (0 degrees)
+                    angle - 0.5 * Math.PI // Expanding green based on elapsed time
                 );
-                ctx.strokeStyle = "#4caf50";
+                ctx.strokeStyle = "#4caf50"; // Green color for progress
                 ctx.lineWidth = 5;
                 ctx.stroke();
 
-                // Flash fun animation when time is below 1 minute
+                // If less than 1 minute left, flash text color for fun
                 if (remainingMs <= 60000) {
                     timerElement.style.color = timerElement.style.color === "red" ? "black" : "red";
                 }
 
-                requestAnimationFrame(updateTimer);
+                // Call updateTimer again after a minute (real-time sync)
+                setTimeout(updateTimer, 60000); // Update every minute
             } else if (now > endTime) {
                 // Timer is over
                 timerElement.querySelector(".time").textContent = "Time's Up!";
@@ -86,9 +82,9 @@ function startTimers() {
             }
         }
 
-        updateTimer();
+        updateTimer(); // Start the timer
     });
 }
 
-// Start the timers
+// Start the timers on page load
 startTimers();
