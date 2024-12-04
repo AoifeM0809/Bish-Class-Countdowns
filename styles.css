@@ -1,15 +1,12 @@
 body {
-    font-family: Veranda, sans-serif;
+    font-family: Arial, sans-serif;
     text-align: center;
     background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
-    
 }
 
 h1 {
     color: #333;
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
 .countdown-container {
@@ -17,34 +14,31 @@ h1 {
     flex-wrap: wrap;
     justify-content: center;
     margin: 20px auto;
-    align-items: stretch;
+    gap: 20px;
 }
 
 .timer {
-    width: 300px;
-    height: 150px;
-    margin: 10px;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 10px;
     padding: 20px;
-    border-radius: 8px;
-    color: black;
-    font-size: 1.2em;
+    width: 200px;
+    height: 250px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    
-   
+    position: relative;
 }
 
-#timer1 { background-color: #ffadad; }
-#timer2 { background-color: #ffd6a5; }
-#timer3 { background-color: #fdffb6; }
-#timer4 { background-color: #bdb2ff; }
-#timer5 { background-color: #9bf6ff; }
-#timer6 { background-color: #a0c4ff; }
-#timer7 { background-color: #bdb2ff; }
-#timer8 { background-color: #ffc6ff; }
-#timer9 { background-color: #d0f4de; }
-
-.time {
+.timer span.time {
+    font-size: 24px;
     font-weight: bold;
+    color: #333;
+}
+
+canvas {
+    margin-top: 20px;
+    border-radius: 50%;
+    background-color: #f4f4f9;
 }
