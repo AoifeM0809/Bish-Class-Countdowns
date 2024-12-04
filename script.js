@@ -1,65 +1,94 @@
-const timers = [
-    { id: "circle1", duration: 2400, label: "time1" }, // 40 minutes
-    { id: "circle2", duration: 3480, label: "time2" }, // 58 minutes
-    // Add more timers as needed
+const schedule = [
+    { id: "timer1", start: "08:00", end: "08:40", label: "circle1" },
+    { id: "timer2", start: "08:40", end: "09:38", label: "circle2" },
+    { id: "timer3", start: "09:38", end: "10:36", label: "circle3" },
+    { id: "timer4", start: "10:36", end: "10:51", label: "circle4" },
+    { id: "timer5", start: "10:51", end: "11:49", label: "circle5" },
+    { id: "timer6", start: "11:49", end: "12:47", label: "circle6" },
+    { id: "timer7", start: "12:47", end: "13:47", label: "circle7" },
+    { id: "timer8", start: "13:47", end: "14:45", label: "circle8" },
+    { id: "timer9", start: "14:45", end: "15:43", label: "circle9" }
 ];
 
-let currentTimerIndex = 0;
+function startTimers() {
+    schedule.forEach(({ id, start, end, label }) => {
+        const timerElement = document.getElementById(id);
+        const circleElement = document.getElementById(label);
 
-function startSequentialCountdown() {
-    if (currentTimerIndex >= timers.length) return; // End if all timers are done
+        function updateTimer() {
+            const now = new Date();
+            const [startHour, startMinute] = start.split(":").map(Number);
+            const [endHour, endMinute] = end.split(":").map(Number);
+            const startTime = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate(),
+                startHour,
+                startMinute
+            );
+            const endTime = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate(),
+                endHour,
+                endMinute
+            );
 
-    const { id, duration, label } = timers[currentTimerIndex];
-    const canvas = document.getElementById(id);
-    const ctx = canvas.getContext("2d");
-    const radius = canvas.width / 2 - 5;
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    let remainingTime = duration;
+            if (now >= startTime && now <= endTime) {
+                // Calculate remaining time
+                const remainingMs = endTime - now;
+                const minutes = Math.floor((remainingMs / 1000 / 60) % 60);
+                const seconds = Math.floor((remainingMs / 1000) % 60);
 
-    function drawCircle() {
-        const progress = remainingTime / duration;
+                // Update text countdown
+                timerElement.querySelector(".time").textContent =
+                    `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 
-        // Clear canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // Update circular timer
+                const ctx = circleElement.getContext("2d");
+                const radius = circleElement.width / 2 - 5;
+                const centerX = circleElement.width / 2;
+                const centerY = circleElement.height / 2;
+                const progress = remainingMs / (endTime - startTime);
 
-        // Draw background circle
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-        ctx.strokeStyle = "#ccc"; // Background color
-        ctx.lineWidth = 5;
-        ctx.stroke();
+                ctx.clearRect(0, 0, circleElement.width, circleElement.height);
 
-        // Draw progress circle
-        ctx.beginPath();
-        ctx.arc(
-            centerX,
-            centerY,
-            radius,
-            -0.5 * Math.PI, // Start from the top
-            (2 * Math.PI * progress) - 0.5 * Math.PI
-        );
-        ctx.strokeStyle = "#4caf50"; // Green progress color
-        ctx.lineWidth = 5;
-        ctx.stroke();
+                // Draw background circle
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                ctx.strokeStyle = "#ccc";
+                ctx.lineWidth = 5;
+                ctx.stroke();
 
-        // Update the text label
-        const minutes = Math.floor(remainingTime / 60);
-        const seconds = remainingTime % 60;
-        document.getElementById(label).innerText = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+                // Draw progress circle
+                ctx.beginPath();
+                ctx.arc(
+                    centerX,
+                    centerY,
+                    radius,
+                    -0.5 * Math.PI,
+                    2 * Math.PI * progress - 0.5 * Math.PI
+                );
+                ctx.strokeStyle = "#4caf50";
+                ctx.lineWidth = 5;
+                ctx.stroke();
 
-        remainingTime--;
+                // Flash fun animation when time is below 1 minute
+                if (remainingMs <= 60000) {
+                    timerElement.style.color = timerElement.style.color === "red" ? "black" : "red";
+                }
 
-        if (remainingTime >= 0) {
-            requestAnimationFrame(drawCircle); // Redraw every second
-        } else {
-            currentTimerIndex++; // Move to the next timer
-            startSequentialCountdown(); // Start the next timer
+                requestAnimationFrame(updateTimer);
+            } else if (now > endTime) {
+                // Timer is over
+                timerElement.querySelector(".time").textContent = "Time's Up!";
+                timerElement.style.color = "blue"; // Fun end state
+            }
         }
-    }
 
-    drawCircle(); // Start drawing
+        updateTimer();
+    });
 }
 
-// Start the sequential countdown
-startSequentialCountdown();
+// Start the timers
+startTimers();
