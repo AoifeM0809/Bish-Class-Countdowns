@@ -68,7 +68,7 @@ function startTimers() {
                     angle - 0.5 * Math.PI // Expanding green based on elapsed time
                 );
                 ctx.strokeStyle = "#4caf50"; // Green color for progress
-                ctx.lineWidth = 5;
+                ctx.lineWidth = 10;
                 ctx.stroke();
 
                 // If less than 1 minute left, flash text color for fun
