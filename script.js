@@ -10,9 +10,9 @@ const schedule = [
     { id: "timer9", start: "14:45", end: "15:43", label: "circle9" }
 ];
 
-function startTimers() {
-    let currentTimerIndex = 0;
+let currentTimerIndex = 0;
 
+function startTimers() {
     // Loop through the schedule array
     schedule.forEach(({ id, start, end, label }, index) => {
         const timerElement = document.getElementById(id);
