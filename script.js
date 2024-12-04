@@ -55,7 +55,7 @@ function startTimers() {
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
                 ctx.strokeStyle = "#ccc"; // Light gray for background
-                ctx.lineWidth = 5;
+                ctx.lineWidth = 10;
                 ctx.stroke();
 
                 // Draw the progress circle (Green expanding based on elapsed time)
