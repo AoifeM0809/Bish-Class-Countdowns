@@ -1,53 +1,65 @@
 const timers = [
-    { start: "08:00", end: "08:40", elementId: "time1" },
-    { start: "08:40", end: "09:38", elementId: "time2" },
-    { start: "09:38", end: "10:36", elementId: "time3" },
-    { start: "10:36", end: "10:51", elementId: "time4" },
-    { start: "10:51", end: "11:49", elementId: "time5" },
-    { start: "11:49", end: "12:47", elementId: "time6" },
-    { start: "12:47", end: "13:47", elementId: "time7" },
-    { start: "13:47", end: "14:45", elementId: "time8" },
-    { start: "14:45", end: "15:43", elementId: "time9" }
+    { id: "circle1", duration: 2400, label: "time1" }, // 40 minutes
+    { id: "circle2", duration: 3480, label: "time2" }, // 58 minutes
+    // Add more timers as needed
 ];
 
-// Adjust for daylight savings if applicable
-function getLocalTime(hour, minute) {
-    const now = new Date();
-    const date = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute);
-    return date.getTime();
-}
+let currentTimerIndex = 0;
 
-function updateCountdown() {
-    const now = new Date().getTime();
+function startSequentialCountdown() {
+    if (currentTimerIndex >= timers.length) return; // End if all timers are done
 
-    timers.forEach(timer => {
-        const start = timer.start.split(":");
-        const end = timer.end.split(":");
-        const startTime = getLocalTime(parseInt(start[0]), parseInt(start[1]));
-        const endTime = getLocalTime(parseInt(end[0]), parseInt(end[1]));
+    const { id, duration, label } = timers[currentTimerIndex];
+    const canvas = document.getElementById(id);
+    const ctx = canvas.getContext("2d");
+    const radius = canvas.width / 2 - 5;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    let remainingTime = duration;
 
-        let countdown;
-        if (now < startTime) {
-            countdown = `Starts in ${formatTime(startTime - now)}`;
-        } else if (now >= startTime && now < endTime) {
-            countdown = `Ends in ${formatTime(endTime - now)}`;
+    function drawCircle() {
+        const progress = remainingTime / duration;
+
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw background circle
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.strokeStyle = "#ccc"; // Background color
+        ctx.lineWidth = 5;
+        ctx.stroke();
+
+        // Draw progress circle
+        ctx.beginPath();
+        ctx.arc(
+            centerX,
+            centerY,
+            radius,
+            -0.5 * Math.PI, // Start from the top
+            (2 * Math.PI * progress) - 0.5 * Math.PI
+        );
+        ctx.strokeStyle = "#4caf50"; // Green progress color
+        ctx.lineWidth = 5;
+        ctx.stroke();
+
+        // Update the text label
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = remainingTime % 60;
+        document.getElementById(label).innerText = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+        remainingTime--;
+
+        if (remainingTime >= 0) {
+            requestAnimationFrame(drawCircle); // Redraw every second
         } else {
-            countdown = "Finished";
+            currentTimerIndex++; // Move to the next timer
+            startSequentialCountdown(); // Start the next timer
         }
+    }
 
-        document.getElementById(timer.elementId).innerText = countdown;
-    });
+    drawCircle(); // Start drawing
 }
 
-function formatTime(ms) {
-    const totalSeconds = Math.floor(ms / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes}m ${seconds}s`;
-}
-
-// Update every second
-setInterval(updateCountdown, 1000);
-
-// Initial call
-updateCountdown();
+// Start the sequential countdown
+startSequentialCountdown();
